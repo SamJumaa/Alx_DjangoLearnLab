@@ -1,15 +1,18 @@
 from relationship_app.models import Author, Book, Library, Librarian
 
-# 1) Query all books by a specific author (ForeignKey)
-author = Author.objects.get(name="George Orwell")
+# Query all books by a specific author
+author_name = "Author Name"
+author = Author.objects.get(name=author_name)
 books_by_author = Book.objects.filter(author=author)
-print(list(books_by_author.values_list("title", flat=True)))
+print(books_by_author)
 
-# 2) List all books in a library (ManyToMany)
-library = Library.objects.get(name="Central Library")
-library_books = library.books.all()
-print(list(library_books.values_list("title", flat=True)))
+# List all books in a library
+library_name = "Library Name"
+library = Library.objects.get(name=library_name)
+books_in_library = library.books.all()
+print(books_in_library)
 
-# 3) Retrieve the librarian for a library (OneToOne)
+# Retrieve the librarian for a library
 librarian = Librarian.objects.get(library=library)
-print(librarian.name)
+print(librarian)
+
