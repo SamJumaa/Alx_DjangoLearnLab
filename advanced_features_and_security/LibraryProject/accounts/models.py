@@ -1,24 +1,25 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+"""Accounts app models (custom user model and manager)."""
+
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 
 
 class CustomUserManager(BaseUserManager):
+    """Manager for CustomUser."""
+
     def create_user(self, username, password=None, **extra_fields):
-        """
-        Creates and saves a normal user.
-        """
+        """Create and save a normal user."""
         if not username:
             raise ValueError("The username must be set")
 
         user = self.model(username=username, **extra_fields)
-        user.set_password(password)  # hashes the password properly
+        user.set_password(password)  # hashes password properly
         user.save(using=self._db)
         return user
 
     def create_superuser(self, username, password=None, **extra_fields):
-        """
-        Creates and saves a superuser (admin).
-        """
+        """Create and save a superuser (admin)."""
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
@@ -31,11 +32,12 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
+    """Custom user model extending Django's AbstractUser."""
+
     date_of_birth = models.DateField(null=True, blank=True)
     profile_photo = models.ImageField(upload_to="profile_photos/", null=True, blank=True)
 
-    objects = CustomUserManager()  # 👈 attach the manager to the model
+    objects = CustomUserManager()
 
-    def __str__(self):
-        return self.username
-
+    def __str__(self) -> str:
+        return str(self.username)
